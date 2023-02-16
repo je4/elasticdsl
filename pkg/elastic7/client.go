@@ -1,4 +1,4 @@
-package elastic8
+package elastic7
 
 import (
 	"emperror.dev/errors"
@@ -39,7 +39,7 @@ func NewClient(address string, index string, apikey string, logger *logging.Logg
 		},
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		// ... using the "apmelasticsearch" wrapper for instrumentation
-		Transport: apmelasticsearch.WrapRoundTripper(http.DefaultTransport),
+		Transport: elastic.NewFakeElasticRoundTripper(apmelasticsearch.WrapRoundTripper(http.DefaultTransport)),
 		// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 		// Retry on 429 TooManyRequests statuses

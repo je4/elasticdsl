@@ -1,4 +1,4 @@
-package elastic8
+package elastic7
 
 import (
 	"emperror.dev/errors"
