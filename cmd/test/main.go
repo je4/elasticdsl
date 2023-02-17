@@ -50,24 +50,36 @@ func main() {
 	logger, lf := lm.CreateLogger("Client DSL Test", "", nil, "DEBUG", logFormat)
 	defer lf.Close()
 
-	var elastic elastic.Client
+	var eClient elastic.Client
 	var err error
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
 	if *_elastic7 {
-		elastic, err = elastic7.NewClient(*_elasticendpoint, "", *_elasticAPIKey, logger)
+		eClient, err = elastic7.NewClient(*_elasticendpoint, "", *_elasticAPIKey, logger)
 	} else {
-		elastic, err = elastic8.NewClient(*_elasticendpoint, "", *_elasticAPIKey, logger)
+		eClient, err = elastic8.NewClient(*_elasticendpoint, "", *_elasticAPIKey, logger)
 		if err != nil {
-			logger.Errorf("cannot connect to elastic endpoint '%s': %v", *_elasticendpoint, err)
+			logger.Errorf("cannot connect to eClient endpoint '%s': %v", *_elasticendpoint, err)
 			logger.Debugf("%v%+v", err, GetErrorStacktrace(err))
 			return
 		}
 	}
-	serverInfo, err := elastic.Info()
+	serverInfo, err := eClient.Info()
 	if err != nil {
 		logger.Errorf("cannot get info from '%s': %v", *_elasticendpoint, err)
 		logger.Debugf("%v%+v", err, GetErrorStacktrace(err))
 		return
 	}
+	eClient.Search(&elastic.SearchConfig{
+		Index:          "alma-je-test",
+		Fields:         nil,
+		QStr:           "",
+		FiltersFields:  nil,
+		Facets:         nil,
+		Groups:         nil,
+		ContentVisible: false,
+		Start:          0,
+		Rows:           0,
+		IsAdmin:        false,
+	})
 	logger.Infof("Server: %v", serverInfo)
 }

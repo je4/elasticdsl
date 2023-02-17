@@ -1,12 +1,11 @@
 package dsl
 
-import "encoding/json"
+// https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-multi-match-query.html
 
-// https://www.elastic.co/guide/en/elasticsearch/reference/8.6/query-dsl-match-query.html
-
-type MatchQuery struct {
-	Field                           string              `json:"-"`
+type MultiMatchQuery struct {
+	Fields                          []string            `json:"fields,omitempty"`
 	Query                           string              `json:"query"`
+	Type                            QueryMultiMatchType `json:"type,omitempty"` // default: QueryMultiMatchTypeBestFields
 	Analyzer                        string              `json:"analyzer,omitempty"`
 	AutoGenerateSynonymsPhraseQuery bool                `json:"auto_generate_synonyms_phrase_query,omitempty"`
 	Fuzziness                       string              `json:"fuzziness,omitempty"`
@@ -18,18 +17,11 @@ type MatchQuery struct {
 	Operator                        QueryOperator       `json:"operator,omitempty"` // default: QueryOperatorOR
 	MinimumShouldMatch              string              `json:"minimum_should_match,omitempty"`
 	ZeroTermsQuery                  QueryZeroTermsQuery `json:"zero_terms_query,omitempty"` // default: QeruyZeroTermsQueryNONE
+	TieBreaker                      float64             `json:"tie_breaker,omitempty"`      // default: 0.0
 }
 
-func (m *MatchQuery) GetQueryName() string { return "match" }
-
-func (m *MatchQuery) MarshalJSON() ([]byte, error) {
-	type _tMatchQuery MatchQuery
-	data := map[string]*_tMatchQuery{
-		m.Field: (*_tMatchQuery)(m),
-	}
-	return json.Marshal(data)
-}
+func (*MultiMatchQuery) GetQueryName() string { return "multi_match" }
 
 var (
-	_ Query = (*MatchQuery)(nil)
+	_ Query = (*MultiMatchQuery)(nil)
 )
