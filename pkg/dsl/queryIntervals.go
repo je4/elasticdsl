@@ -12,15 +12,15 @@ type Script struct {
 }
 
 type InvervalsQueryFilter struct {
-	After          *Query  `json:"after,omitempty"`
-	Before         *Query  `json:"before,omitempty"`
-	ContainedBy    *Query  `json:"contained_by,omitempty"`
-	Containing     *Query  `json:"containing,omitempty"`
-	NotContainedBy *Query  `json:"not_contained_by,omitempty"`
-	NotContaining  *Query  `json:"not_containing,omitempty"`
-	NotOverlapping *Query  `json:"not_overlapping,omitempty"`
-	Overlapping    *Query  `json:"overlapping,omitempty"`
-	Script         *Script `json:"script,omitempty"`
+	After          *BaseQuery `json:"after,omitempty"`
+	Before         *BaseQuery `json:"before,omitempty"`
+	ContainedBy    *BaseQuery `json:"contained_by,omitempty"`
+	Containing     *BaseQuery `json:"containing,omitempty"`
+	NotContainedBy *BaseQuery `json:"not_contained_by,omitempty"`
+	NotContaining  *BaseQuery `json:"not_containing,omitempty"`
+	NotOverlapping *BaseQuery `json:"not_overlapping,omitempty"`
+	Overlapping    *BaseQuery `json:"overlapping,omitempty"`
+	Script         *Script    `json:"script,omitempty"`
 }
 
 type InvervalsQueryMatch struct {
@@ -86,5 +86,5 @@ func (i *IntervalsQuery) MarshalJSON() ([]byte, error) {
 }
 
 var (
-	_ Query = (*IntervalsQuery)(nil)
+	_ BaseQuery = (*IntervalsQuery)(nil)
 )

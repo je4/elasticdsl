@@ -70,5 +70,5 @@ func (r *RangeQuery) MarshalJSON() ([]byte, error) {
 }
 
 var (
-	_ Query = (*RangeQuery)(nil)
+	_ BaseQuery = (*RangeQuery)(nil)
 )

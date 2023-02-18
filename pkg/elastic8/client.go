@@ -5,6 +5,7 @@ import (
 	"github.com/cenkalti/backoff/v4"
 	"github.com/elastic/elastic-transport-go/v8/elastictransport"
 	"github.com/elastic/go-elasticsearch/v8"
+	"github.com/je4/elasticdsl/v2/pkg/dsl"
 	"github.com/je4/elasticdsl/v2/pkg/elastic"
 	"github.com/op/go-logging"
 	"go.elastic.co/apm/module/apmelasticsearch"
@@ -17,6 +18,7 @@ type Client struct {
 	index string
 	es    *elasticsearch.Client
 	log   *logging.Logger
+	API   *dsl.API
 }
 
 func NewClient(address string, index string, apikey string, logger *logging.Logger) (*Client, error) {
@@ -65,7 +67,12 @@ func NewClient(address string, index string, apikey string, logger *logging.Logg
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot create client")
 	}
+	idx.API = dsl.NewApi()
 	return idx, nil
+}
+
+func (c *Client) GetDSLAPI() *dsl.API {
+	return c.API
 }
 
 var (

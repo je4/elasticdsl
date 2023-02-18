@@ -85,3 +85,13 @@ const (
 	SearchSuggestModeMissing SearchSuggestMode = "missing"
 	SearchSuggestModePopular SearchSuggestMode = "popular"
 )
+
+type ScoreMode string
+
+const (
+	ScoreModeAVG  ScoreMode = "avg"
+	ScoreModeMAX  ScoreMode = "max"
+	ScoreModeMIN  ScoreMode = "min"
+	ScoreModeNONE ScoreMode = "none"
+	ScoreModeSUM  ScoreMode = "sum"
+)

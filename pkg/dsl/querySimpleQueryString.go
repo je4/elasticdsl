@@ -1,24 +1,95 @@
 package dsl
 
-import (
-	"encoding/json"
-	"strings"
-)
+// SimpleQueryStringQuery results a simple_query_string struct
+//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-simple-query-string-query.html
+type SimpleQueryStringQuery func(query string, o ...func(all *tSimpleQueryStringQuery)) BaseQuery
 
-// https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-simple-query-string-query.html
-
-type SimpleQueryStringQueryFlags []QuerySimpleQueryStringFlag
-
-func (flags SimpleQueryStringQueryFlags) MarshalJSON() ([]byte, error) {
-	var strFlags = []string{}
-	for _, f := range flags {
-		strFlags = append(strFlags, string(f))
+func (sqsq *SimpleQueryStringQuery) WithFields(fields ...string) func(all *tSimpleQueryStringQuery) {
+	return func(all *tSimpleQueryStringQuery) {
+		all.Fields = fields
 	}
-	data := strings.Join(strFlags, "|")
-	return json.Marshal(data)
 }
 
-type SimpleQueryStringQuery struct {
+func (sqsq *SimpleQueryStringQuery) WithDefaultOperator(defaultOperator QueryOperator) func(all *tSimpleQueryStringQuery) {
+	return func(all *tSimpleQueryStringQuery) {
+		all.DefaultOperator = defaultOperator
+	}
+}
+
+func (sqsq *SimpleQueryStringQuery) WithAnalyzeWildcard(analyzeWildcard bool) func(all *tSimpleQueryStringQuery) {
+	return func(all *tSimpleQueryStringQuery) {
+		all.AnalyzeWildcard = analyzeWildcard
+	}
+}
+
+func (sqsq *SimpleQueryStringQuery) WithAnalyzer(analyzer string) func(all *tSimpleQueryStringQuery) {
+	return func(all *tSimpleQueryStringQuery) {
+		all.Analyzer = analyzer
+	}
+}
+
+func (sqsq *SimpleQueryStringQuery) WithAutoGenerateSynonymsPhraseQuery(autoGenerateSynonymsPhraseQuery bool) func(all *tSimpleQueryStringQuery) {
+	return func(all *tSimpleQueryStringQuery) {
+		all.AutoGenerateSynonymsPhraseQuery = autoGenerateSynonymsPhraseQuery
+	}
+}
+
+func (sqsq *SimpleQueryStringQuery) WithFlags(flags ...QuerySimpleQueryStringFlag) func(all *tSimpleQueryStringQuery) {
+	return func(all *tSimpleQueryStringQuery) {
+		all.Flags = flags
+	}
+}
+
+func (sqsq *SimpleQueryStringQuery) WithFuzzyMaxExpansions(FuzzyMaxExpansions int) func(all *tSimpleQueryStringQuery) {
+	return func(all *tSimpleQueryStringQuery) {
+		all.FuzzyMaxExpansions = FuzzyMaxExpansions
+	}
+}
+
+func (sqsq *SimpleQueryStringQuery) WithFuzzyPrefixLength(FuzzyPrefixLength int) func(all *tSimpleQueryStringQuery) {
+	return func(all *tSimpleQueryStringQuery) {
+		all.FuzzyPrefixLength = FuzzyPrefixLength
+	}
+}
+
+func (sqsq *SimpleQueryStringQuery) WithFuzzyTranspositions(FuzzyTranspositions bool) func(all *tSimpleQueryStringQuery) {
+	return func(all *tSimpleQueryStringQuery) {
+		all.FuzzyTranspositions = FuzzyTranspositions
+	}
+}
+
+func (sqsq *SimpleQueryStringQuery) WithLenient(Lenient bool) func(all *tSimpleQueryStringQuery) {
+	return func(all *tSimpleQueryStringQuery) {
+		all.Lenient = Lenient
+	}
+}
+
+func (sqsq *SimpleQueryStringQuery) WithMinimumShouldMatch(MinimumShouldMatch *MinimumShouldMatch) func(all *tSimpleQueryStringQuery) {
+	return func(all *tSimpleQueryStringQuery) {
+		all.MinimumShouldMatch = MinimumShouldMatch
+	}
+}
+
+func (sqsq *SimpleQueryStringQuery) WithQuoteFieldSuffix(QuoteFieldSuffix string) func(all *tSimpleQueryStringQuery) {
+	return func(all *tSimpleQueryStringQuery) {
+		all.QuoteFieldSuffix = QuoteFieldSuffix
+	}
+}
+
+func NewSimpleQueryStringQuery() SimpleQueryStringQuery {
+	return func(query string, o ...func(all *tSimpleQueryStringQuery)) BaseQuery {
+		var r = &tSimpleQueryStringQuery{
+			Query: query,
+		}
+		for _, f := range o {
+			f(r)
+		}
+		return r
+	}
+}
+
+type tSimpleQueryStringQuery struct {
 	Query                           string                      `json:"query"`
 	Fields                          []string                    `json:"fields,omitempty"`
 	DefaultOperator                 QueryOperator               `json:"default_operator,omitempty"` // default: QueryOperatorOR
@@ -30,12 +101,12 @@ type SimpleQueryStringQuery struct {
 	FuzzyPrefixLength               int                         `json:"fuzzy_prefix_length,omitempty"`  // default: 0
 	FuzzyTranspositions             bool                        `json:"fuzzy_transpositions,omitempty"` // default: true
 	Lenient                         bool                        `json:"lenient,omitempty"`              // default: false
-	MinimumShouldMatch              string                      `json:"minimum_should_match,omitempty"`
+	MinimumShouldMatch              *MinimumShouldMatch         `json:"minimum_should_match,omitempty"`
 	QuoteFieldSuffix                string                      `json:"quote_field_suffix,omitempty"`
 }
 
-func (*SimpleQueryStringQuery) GetQueryName() string { return "simple_query_string" }
+func (*tSimpleQueryStringQuery) GetQueryName() string { return "simple_query_string" }
 
 var (
-	_ Query = (*SimpleQueryStringQuery)(nil)
+	_ BaseQuery = (*tSimpleQueryStringQuery)(nil)
 )

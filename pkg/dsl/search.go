@@ -1,6 +1,41 @@
 package dsl
 
 // https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html
+type Search func(o ...func(all *tSearch)) *tSearch
+
+func (s *Search) WithQuery(query *tQuery) func(all *tSearch) {
+	return func(all *tSearch) {
+		all.Query = query
+	}
+}
+
+func (s *Search) WithAggs(aggs *tAggs) func(all *tSearch) {
+	return func(all *tSearch) {
+		all.Aggs = aggs
+	}
+}
+
+func (s *Search) WithIndicesBoost(ib tIndicesBoost) func(all *tSearch) {
+	return func(all *tSearch) {
+		all.IndicesBoost = ib
+	}
+}
+
+func NewSearch() Search {
+	return func(o ...func(search *tSearch)) *tSearch {
+		var r = &tSearch{}
+		for _, f := range o {
+			f(r)
+		}
+		return r
+	}
+}
+
+type tSearch struct {
+	Query        *tQuery       `json:"query,omitempty"`
+	Aggs         *tAggs        `json:"aggs,omitempty"`
+	IndicesBoost tIndicesBoost `json:"indices_boost,omitempty"`
+}
 
 type SearchQueryParams struct {
 	AllowNoIndices             bool                 `json:"allow_no_indices,omitempty"`             // default: true

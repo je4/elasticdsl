@@ -19,5 +19,5 @@ func (mp *MatchPhraseQuery) MarshalJSON() ([]byte, error) {
 func (mp *MatchPhraseQuery) GetQueryName() string { return "match_phrase" }
 
 var (
-	_ Query = (*MatchPhraseQuery)(nil)
+	_ BaseQuery = (*MatchPhraseQuery)(nil)
 )

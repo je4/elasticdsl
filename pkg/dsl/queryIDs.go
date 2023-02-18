@@ -9,5 +9,5 @@ type IDsQuery struct {
 func (*IDsQuery) GetQueryName() string { return "ids" }
 
 var (
-	_ Query = (*IDsQuery)(nil)
+	_ BaseQuery = (*IDsQuery)(nil)
 )

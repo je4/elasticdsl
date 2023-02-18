@@ -1,18 +1,21 @@
 package dsl
 
-// https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-all-query.html
+import "encoding/json"
 
-type MatchAllQuery func(o ...func(all *queryMatchAll)) Query
+// MatchAllQuery results a match_all query struct
+//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-match-all-query.html
+type MatchAllQuery func(o ...func(all *tMatchAllQuery)) BaseQuery
 
-func (qma *MatchAllQuery) WithBoost(boost float64) func(all *queryMatchAll) {
-	return func(all *queryMatchAll) {
+func (qma *MatchAllQuery) WithBoost(boost float64) func(all *tMatchAllQuery) {
+	return func(all *tMatchAllQuery) {
 		all.Boost = boost
 	}
 }
 
 func NewMatchAllQuery() MatchAllQuery {
-	return func(o ...func(*queryMatchAll)) Query {
-		var r = &queryMatchAll{}
+	return func(o ...func(*tMatchAllQuery)) BaseQuery {
+		var r = &tMatchAllQuery{}
 		for _, f := range o {
 			f(r)
 		}
@@ -20,12 +23,19 @@ func NewMatchAllQuery() MatchAllQuery {
 	}
 }
 
-type queryMatchAll struct {
+type tMatchAllQuery struct {
 	Boost float64 `json:"boost,omitempty"`
 }
 
-func (*queryMatchAll) GetQueryName() string { return "match_all" }
+func (*tMatchAllQuery) GetQueryName() string { return "match_all" }
+
+func (q *tMatchAllQuery) MarshalJSON() ([]byte, error) {
+	type _tMatchAllQuery tMatchAllQuery
+	return json.Marshal(map[string]*_tMatchAllQuery{
+		q.GetQueryName(): (*_tMatchAllQuery)(q),
+	})
+}
 
 var (
-	_ Query = (*queryMatchAll)(nil)
+	_ BaseQuery = (*tMatchAllQuery)(nil)
 )

@@ -21,5 +21,5 @@ func (mb *MatchBoolPrefixQuery) MarshalJSON() ([]byte, error) {
 }
 
 var (
-	_ Query = (*MatchBoolPrefixQuery)(nil)
+	_ BaseQuery = (*MatchBoolPrefixQuery)(nil)
 )

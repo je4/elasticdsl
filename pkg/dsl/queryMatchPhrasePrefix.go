@@ -22,5 +22,5 @@ func (mpp *MatchPhrasePrefixQuery) MarshalJSON() ([]byte, error) {
 }
 
 var (
-	_ Query = (*MatchPhrasePrefixQuery)(nil)
+	_ BaseQuery = (*MatchPhrasePrefixQuery)(nil)
 )

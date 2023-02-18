@@ -1,6 +1,9 @@
 package elastic
 
+import "github.com/je4/elasticdsl/v2/pkg/dsl"
+
 type Client interface {
 	Info() (*ResultInfo, error)
-	Search(cfg *SearchConfig) ([]map[string][]string, map[string]any, int64, ResultFacet, error)
+	GetDSLAPI() *dsl.API
+	Search(index string, srch any) (*SearchResult, error)
 }

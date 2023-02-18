@@ -46,3 +46,26 @@ func (tthv *TrackTotalHitsVal) MarshalJSON() ([]byte, error) {
 	}
 	return json.Marshal(tthv.BoolVal)
 }
+
+type MinimumShouldMatch struct {
+	StringValue string
+	IntValue    int
+}
+
+func (msm *MinimumShouldMatch) MarshalJSON() ([]byte, error) {
+	if msm.StringValue != "" {
+		return json.Marshal(msm.StringValue)
+	}
+	return json.Marshal(msm.IntValue)
+}
+
+type SimpleQueryStringQueryFlags []QuerySimpleQueryStringFlag
+
+func (flags SimpleQueryStringQueryFlags) MarshalJSON() ([]byte, error) {
+	var strFlags = []string{}
+	for _, f := range flags {
+		strFlags = append(strFlags, string(f))
+	}
+	data := strings.Join(strFlags, "|")
+	return json.Marshal(data)
+}

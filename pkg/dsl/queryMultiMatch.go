@@ -23,5 +23,5 @@ type MultiMatchQuery struct {
 func (*MultiMatchQuery) GetQueryName() string { return "multi_match" }
 
 var (
-	_ Query = (*MultiMatchQuery)(nil)
+	_ BaseQuery = (*MultiMatchQuery)(nil)
 )

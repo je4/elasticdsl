@@ -30,5 +30,5 @@ type StringQuery struct {
 func (*StringQuery) GetQueryName() string { return "query_string" }
 
 var (
-	_ Query = (*StringQuery)(nil)
+	_ BaseQuery = (*StringQuery)(nil)
 )

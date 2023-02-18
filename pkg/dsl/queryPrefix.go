@@ -22,5 +22,5 @@ func (f *PrefixQuery) MarshalJSON() ([]byte, error) {
 }
 
 var (
-	_ Query = (*PrefixQuery)(nil)
+	_ BaseQuery = (*PrefixQuery)(nil)
 )

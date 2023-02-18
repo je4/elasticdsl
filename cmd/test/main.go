@@ -69,17 +69,7 @@ func main() {
 		logger.Debugf("%v%+v", err, GetErrorStacktrace(err))
 		return
 	}
-	eClient.Search(&elastic.SearchConfig{
-		Index:          "alma-je-test",
-		Fields:         nil,
-		QStr:           "",
-		FiltersFields:  nil,
-		Facets:         nil,
-		Groups:         nil,
-		ContentVisible: false,
-		Start:          0,
-		Rows:           0,
-		IsAdmin:        false,
-	})
+
+	//	eClient.Search("alma-je-test")
 	logger.Infof("Server: %v", serverInfo)
 }

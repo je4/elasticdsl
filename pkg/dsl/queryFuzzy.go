@@ -2,9 +2,55 @@ package dsl
 
 import "encoding/json"
 
-// https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-fuzzy-query.html
+// FuzzyQuery results a fuzzy query struct
+//
+// See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-fuzzy-query.html
+type Fuzzyquery func(field string, value string, o ...func(all *tFuzzyQuery)) BaseQuery
 
-type FuzzyQuery struct {
+func (fq *Fuzzyquery) WithFuzziness(fuzziness string) func(all *tFuzzyQuery) {
+	return func(all *tFuzzyQuery) {
+		all.Fuzziness = fuzziness
+	}
+}
+
+func (fq *Fuzzyquery) WithMaxExpansion(maxExpansion int) func(all *tFuzzyQuery) {
+	return func(all *tFuzzyQuery) {
+		all.MaxExpansion = maxExpansion
+	}
+}
+
+func (fq *Fuzzyquery) WithPrefixLength(prefixLength int) func(all *tFuzzyQuery) {
+	return func(all *tFuzzyQuery) {
+		all.PrefixLength = prefixLength
+	}
+}
+
+func (fq *Fuzzyquery) WithTranspositions(transpositions bool) func(all *tFuzzyQuery) {
+	return func(all *tFuzzyQuery) {
+		all.Transpositions = transpositions
+	}
+}
+
+func (fq *Fuzzyquery) WithRewrite(rewrite QueryRewrite) func(all *tFuzzyQuery) {
+	return func(all *tFuzzyQuery) {
+		all.Rewrite = rewrite
+	}
+}
+
+func NewFuzzyQuery() Fuzzyquery {
+	return func(field string, value string, o ...func(all *tFuzzyQuery)) BaseQuery {
+		var r = &tFuzzyQuery{
+			Field: field,
+			Value: value,
+		}
+		for _, f := range o {
+			f(r)
+		}
+		return r
+	}
+}
+
+type tFuzzyQuery struct {
 	Field          string       `json:"-"`
 	Value          string       `json:"value"`
 	Fuzziness      string       `json:"fuzziness,omitempty"`
@@ -14,10 +60,10 @@ type FuzzyQuery struct {
 	Rewrite        QueryRewrite `json:"rewrite,omitempty"`
 }
 
-func (f *FuzzyQuery) GetQueryName() string { return "fuzzy" }
+func (f *tFuzzyQuery) GetQueryName() string { return "fuzzy" }
 
-func (f *FuzzyQuery) MarshalJSON() ([]byte, error) {
-	type _FuzzyQuery FuzzyQuery
+func (f *tFuzzyQuery) MarshalJSON() ([]byte, error) {
+	type _FuzzyQuery tFuzzyQuery
 	data := map[string]*_FuzzyQuery{
 		f.Field: (*_FuzzyQuery)(f),
 	}
@@ -25,5 +71,5 @@ func (f *FuzzyQuery) MarshalJSON() ([]byte, error) {
 }
 
 var (
-	_ Query = (*FuzzyQuery)(nil)
+	_ BaseQuery = (*tFuzzyQuery)(nil)
 )
