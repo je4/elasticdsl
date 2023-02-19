@@ -69,3 +69,13 @@ func (flags SimpleQueryStringQueryFlags) MarshalJSON() ([]byte, error) {
 	data := strings.Join(strFlags, "|")
 	return json.Marshal(data)
 }
+
+type AggTermsOrder struct {
+	Field string `json:"-"`
+	Order Order  `json:"-"`
+}
+
+func (ato *AggTermsOrder) MarshalJSON() ([]byte, error) {
+	var data = map[string]Order{ato.Field: ato.Order}
+	return json.Marshal(data)
+}

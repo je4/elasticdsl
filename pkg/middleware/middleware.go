@@ -10,31 +10,23 @@ type Middleware struct {
 	es elastic.Client
 }
 
-func (m *Middleware) Search(index string) (*Result, error) {
-	api := m.es.GetDSLAPI()
+func (m *Middleware) Search(index string, facets []Facet) (*Result, error) {
+	var api = m.es.GetDSLAPI()
+
+	var aggs = []dsl.Aggregation{}
+	for _, facet := range facets {
+		aggs = append(aggs, facet.GetAgg(api))
+	}
+
 	search := api.Search(
 		api.Search.WithQuery(
 			api.Query(
-				api.BoolQuery(
-					api.BoolQuery.WithMust(
-						api.MatchAllQuery(
-							api.MatchAllQuery.WithBoost(0.5),
-						),
-					),
-					api.BoolQuery.WithMinimumShouldMatch(
-						&dsl.MinimumShouldMatch{IntValue: 1},
-					),
+				api.MatchAllQuery(
+					api.MatchAllQuery.WithBoost(0.5),
 				),
 			),
 		),
-		api.Search.WithAggs(
-			api.Aggs(),
-		),
-		api.Search.WithIndicesBoost(
-			api.IndicesBoost(
-				api.IndicesBoost.AppendIndex(index, 2.1),
-			),
-		),
+		api.Search.WithAggs(aggs...),
 	)
 
 	result, err := m.es.Search(index, search)

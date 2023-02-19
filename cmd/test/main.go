@@ -8,6 +8,7 @@ import (
 	"github.com/je4/elasticdsl/v2/pkg/elastic"
 	"github.com/je4/elasticdsl/v2/pkg/elastic7"
 	"github.com/je4/elasticdsl/v2/pkg/elastic8"
+	"github.com/je4/elasticdsl/v2/pkg/middleware"
 	lm "github.com/je4/utils/v2/pkg/logger"
 	"net/http"
 )
@@ -72,4 +73,20 @@ func main() {
 
 	//	eClient.Search("alma-je-test")
 	logger.Infof("Server: %v", serverInfo)
+
+	m := middleware.NewMiddleware(eClient)
+	var index = "alma-je-test"
+	var facets = []middleware.Facet{}
+	var facet = &middleware.StringFacet{
+		Name:   "name",
+		Values: []string{"Metallindustrie"},
+	}
+	facets = append(facets, facet)
+	result, err := m.Search(index, facets)
+	if err != nil {
+		logger.Errorf("cannot search from '%s/%s': %v", *_elasticendpoint, index, err)
+		logger.Debugf("%v%+v", err, GetErrorStacktrace(err))
+		return
+	}
+	_ = result
 }

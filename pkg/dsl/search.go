@@ -1,21 +1,23 @@
 package dsl
 
+import "encoding/json"
+
 // https://www.elastic.co/guide/en/elasticsearch/reference/current/search-search.html
 type Search func(o ...func(all *tSearch)) *tSearch
 
-func (s *Search) WithQuery(query *tQuery) func(all *tSearch) {
+func (*Search) WithQuery(query *tQuery) func(all *tSearch) {
 	return func(all *tSearch) {
 		all.Query = query
 	}
 }
 
-func (s *Search) WithAggs(aggs *tAggs) func(all *tSearch) {
+func (*Search) WithAggs(aggs ...Aggregation) func(all *tSearch) {
 	return func(all *tSearch) {
 		all.Aggs = aggs
 	}
 }
 
-func (s *Search) WithIndicesBoost(ib tIndicesBoost) func(all *tSearch) {
+func (*Search) WithIndicesBoost(ib tIndicesBoost) func(all *tSearch) {
 	return func(all *tSearch) {
 		all.IndicesBoost = ib
 	}
@@ -32,9 +34,27 @@ func NewSearch() Search {
 }
 
 type tSearch struct {
-	Query        *tQuery       `json:"query,omitempty"`
-	Aggs         *tAggs        `json:"aggs,omitempty"`
-	IndicesBoost tIndicesBoost `json:"indices_boost,omitempty"`
+	Query        *tQuery       `json:"-"`
+	Aggs         []Aggregation `json:"-"`
+	IndicesBoost tIndicesBoost `json:"-"`
+}
+
+func (s *tSearch) MarshalJSON() ([]byte, error) {
+	var data = map[string]any{}
+	if s.Query != nil {
+		data["query"] = s.Query
+	}
+	if len(s.Aggs) > 0 {
+		aggs := map[string]any{}
+		for _, agg := range s.Aggs {
+			aggs[agg.GetAggName()] = agg
+		}
+		data["aggs"] = aggs
+	}
+	if len(s.IndicesBoost) > 0 {
+		data["indices_boost"] = s.IndicesBoost
+	}
+	return json.Marshal(data)
 }
 
 type SearchQueryParams struct {

@@ -43,7 +43,7 @@ func (*tTermsQuery) GetQueryName() string { return "terms" }
 
 func (t *tTermsQuery) MarshalJSON() ([]byte, error) {
 	type _TermsQuery tTermsQuery
-	data := map[string][]any{
+	data := map[string]any{
 		t.Field: t.Values,
 	}
 	if t.Boost != 0.0 {

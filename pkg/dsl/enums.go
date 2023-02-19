@@ -95,3 +95,10 @@ const (
 	ScoreModeNONE ScoreMode = "none"
 	ScoreModeSUM  ScoreMode = "sum"
 )
+
+type Order string
+
+const (
+	OrderASC  Order = "asc"
+	OrderDESC Order = "desc"
+)

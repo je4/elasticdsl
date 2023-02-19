@@ -45,7 +45,7 @@ func (es8 *Client) Search(index string, srch any) (*elastic.SearchResult, error)
 		es8.es.Search.WithContext(context.Background()),
 		es8.es.Search.WithIndex(index),
 		es8.es.Search.WithTrackTotalHits(true),
-		es8.es.Search.WithPretty(),
+		//		es8.es.Search.WithPretty(),
 		es8.es.Search.WithBody(bytes.NewBuffer(data)),
 	)
 	defer res.Body.Close()
