@@ -15,9 +15,9 @@ type API struct {
 	TermsQuery             TermsQuery
 	Search                 Search
 	Aggs                   Aggs
-	Agg                    Agg
 	AggNested              AggNested
 	AggTerms               AggTerms
+	AggFilter              AggFilter
 	IndicesBoost           IndicesBoost
 }
 
@@ -37,9 +37,9 @@ func NewApi() *API {
 		TermsQuery:             NewTermsQuery(),
 		Search:                 NewSearch(),
 		Aggs:                   NewAggs(),
-		Agg:                    NewAgg(),
 		AggNested:              NewAggNested(),
 		AggTerms:               NewAggTerms(),
+		AggFilter:              NewAggFilter(),
 		IndicesBoost:           NewIndicesBoost(),
 	}
 	return api

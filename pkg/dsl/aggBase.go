@@ -1,5 +1,5 @@
 package dsl
 
-type Aggregation interface {
+type BaseAgg interface {
 	GetAggName() string
 }

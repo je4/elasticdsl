@@ -9,13 +9,14 @@ type AuthorFacet struct {
 
 func (af *AuthorFacet) GetName() string { return af.Name }
 
-func (af *AuthorFacet) GetAgg(api *dsl.API) dsl.Aggregation {
+func (af *AuthorFacet) GetAgg(api *dsl.API) dsl.BaseAgg {
 	var aggs = api.AggNested(
+		"facet_object_"+af.Name,
 		"facet.objects",
 		api.Aggs(
 			api.Aggs.WithAggregations(
 				api.AggTerms(
-					"facet_objects_"+af.Name,
+					"facet_objects_terms_"+af.Name,
 					"facet.objects.",
 				),
 			),

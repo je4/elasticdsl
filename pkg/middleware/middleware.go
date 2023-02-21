@@ -10,10 +10,10 @@ type Middleware struct {
 	es elastic.Client
 }
 
-func (m *Middleware) Search(index string, facets []Facet) (*Result, error) {
+func (m *Middleware) Search(index string, facets []Aggregation) (*Result, error) {
 	var api = m.es.GetDSLAPI()
 
-	var aggs = []dsl.Aggregation{}
+	var aggs = []dsl.BaseAgg{}
 	for _, facet := range facets {
 		aggs = append(aggs, facet.GetAgg(api))
 	}

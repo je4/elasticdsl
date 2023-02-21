@@ -9,17 +9,17 @@ type StringFacet struct {
 
 func (sf *StringFacet) GetName() string { return sf.Name }
 
-func (sf *StringFacet) GetAgg(api *dsl.API) dsl.Aggregation {
-	var aggs = api.AggNested(
-		"facet.strings",
-		api.Aggs(
-			api.Aggs.WithAggregations(
-				api.AggTerms(
-					"facet_strings_"+sf.Name,
-					"facet.strings."+sf.Name,
-				),
+func (sf *StringFacet) GetAgg(api *dsl.API) dsl.BaseAgg {
+	var agg = api.AggFilter(
+		"facet-strings-"+sf.Name+"-filter",
+		"facet.strings.name",
+		sf.Name,
+		api.AggFilter.WithAggs(
+			api.AggTerms(
+				"facet-strings-"+sf.Name+"-terms",
+				"facet.strings.string",
 			),
 		),
 	)
-	return aggs
+	return agg
 }

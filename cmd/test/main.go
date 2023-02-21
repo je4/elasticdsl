@@ -76,12 +76,18 @@ func main() {
 
 	m := middleware.NewMiddleware(eClient)
 	var index = "alma-je-test"
-	var facets = []middleware.Facet{}
-	var facet = &middleware.StringFacet{
-		Name:   "name",
-		Values: []string{"Metallindustrie"},
+	var facets = []middleware.Aggregation{}
+	var stringFacets = middleware.StringFacets{
+		&middleware.StringFacet{
+			Name:   "genre",
+			Values: []string{"Handschrift"},
+		},
+		&middleware.StringFacet{
+			Name:   "library",
+			Values: []string{"A100"},
+		},
 	}
-	facets = append(facets, facet)
+	facets = append(facets, stringFacets)
 	result, err := m.Search(index, facets)
 	if err != nil {
 		logger.Errorf("cannot search from '%s/%s': %v", *_elasticendpoint, index, err)

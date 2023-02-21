@@ -7,7 +7,7 @@ import "encoding/json"
 // See full documentation at https://www.elastic.co/guide/en/elasticsearch/reference/8.6/search-aggregations.html
 type Aggs func(o ...func(aggs *tAggs)) *tAggs
 
-func (a *Aggs) WithAggregations(aggs ...Aggregation) func(all *tAggs) {
+func (a *Aggs) WithAggregations(aggs ...BaseAgg) func(all *tAggs) {
 	return func(all *tAggs) {
 		all.Aggs = aggs
 	}
@@ -24,7 +24,7 @@ func NewAggs() Aggs {
 }
 
 type tAggs struct {
-	Aggs []Aggregation `json:"-"`
+	Aggs []BaseAgg `json:"-"`
 }
 
 func (*tAggs) GetAggName() string { return "aggs" }

@@ -5,11 +5,12 @@ import "encoding/json"
 // AggNested returns a nested body
 //
 // See full documentations at https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-nested-aggregation.html
-type AggNested func(path string, aggs *tAggs, o ...func(aggNestes *tAggNested)) *tAggNested
+type AggNested func(name string, path string, aggs *tAggs, o ...func(aggNestes *tAggNested)) *tAggNested
 
 func NewAggNested() AggNested {
-	return func(path string, aggs *tAggs, o ...func(aggNestes *tAggNested)) *tAggNested {
+	return func(name string, path string, aggs *tAggs, o ...func(aggNestes *tAggNested)) *tAggNested {
 		var r = &tAggNested{
+			Name: name,
 			Path: path,
 			Aggs: aggs,
 		}
@@ -21,11 +22,12 @@ func NewAggNested() AggNested {
 }
 
 type tAggNested struct {
+	Name string `json:"-"`
 	Path string `json:"-"`
 	Aggs *tAggs `json:"-"`
 }
 
-func (*tAggNested) GetAggName() string { return "nested" }
+func (a *tAggNested) GetAggName() string { return a.Name }
 
 func (an *tAggNested) MarshalJSON() ([]byte, error) {
 	data := map[string]any{

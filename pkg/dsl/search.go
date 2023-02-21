@@ -11,7 +11,7 @@ func (*Search) WithQuery(query *tQuery) func(all *tSearch) {
 	}
 }
 
-func (*Search) WithAggs(aggs ...Aggregation) func(all *tSearch) {
+func (*Search) WithAggs(aggs ...BaseAgg) func(all *tSearch) {
 	return func(all *tSearch) {
 		all.Aggs = aggs
 	}
@@ -35,7 +35,7 @@ func NewSearch() Search {
 
 type tSearch struct {
 	Query        *tQuery       `json:"-"`
-	Aggs         []Aggregation `json:"-"`
+	Aggs         []BaseAgg     `json:"-"`
 	IndicesBoost tIndicesBoost `json:"-"`
 }
 
