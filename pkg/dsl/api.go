@@ -19,6 +19,8 @@ type API struct {
 	AggTerms               AggTerms
 	AggFilter              AggFilter
 	IndicesBoost           IndicesBoost
+	Fields                 Fields
+	FieldsField            FieldsField
 }
 
 func NewApi() *API {
@@ -41,6 +43,8 @@ func NewApi() *API {
 		AggTerms:               NewAggTerms(),
 		AggFilter:              NewAggFilter(),
 		IndicesBoost:           NewIndicesBoost(),
+		Fields:                 NewFields(),
+		FieldsField:            NewFieldsField(),
 	}
 	return api
 }

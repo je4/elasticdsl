@@ -42,12 +42,12 @@ type Error struct {
 }
 
 type SearchResult struct {
-	ScrollID     string        `json:"_scroll_id,omitempty"`
-	Took         int           `json:"took,omitempty"`
-	TimedOut     bool          `json:"timed_out,omitempty"`
-	Shards       *Shard        `json:"_shards,omitempty"`
-	Hits         *Hits         `json:"hits,omitempty"`
-	Aggregations *Aggregations `json:"aggregations,omitempty"`
-	Error        *Error        `json:"error,omitempty"`
-	Status       int           `json:"status,omitempty"`
+	ScrollID     string       `json:"_scroll_id,omitempty"`
+	Took         int          `json:"took,omitempty"`
+	TimedOut     bool         `json:"timed_out,omitempty"`
+	Shards       *Shard       `json:"_shards,omitempty"`
+	Hits         *Hits        `json:"hits,omitempty"`
+	Aggregations Aggregations `json:"aggregations,omitempty"`
+	Error        *Error       `json:"error,omitempty"`
+	Status       int          `json:"status,omitempty"`
 }

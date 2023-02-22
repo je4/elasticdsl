@@ -8,50 +8,50 @@ import (
 	"github.com/je4/elasticdsl/v2/pkg/elastic"
 )
 
-type StringFacet struct {
+type PersonFacet struct {
 	Name   string
 	Values []string
 }
 
-type StringFacetResult struct {
+type PersonFacetResult struct {
 	DocCount int    `json:"doc_count"`
 	Key      string `json:"key"`
 }
 
-func (sf *StringFacet) GetName() string { return sf.Name }
+func (sf *PersonFacet) GetName() string { return sf.Name }
 
-func (sf *StringFacet) GetAgg(api *dsl.API) dsl.BaseAgg {
+func (sf *PersonFacet) GetAgg(api *dsl.API) dsl.BaseAgg {
 	var agg = api.AggFilter(
-		"facet-strings-"+sf.Name+"-filter",
-		"facet.strings.name",
+		"facet-persons-"+sf.Name+"-filter",
+		"facet.objects.name",
 		sf.Name,
 		api.AggFilter.WithAggs(
 			api.AggTerms(
-				"facet-strings-"+sf.Name+"-terms",
-				"facet.strings.string",
+				"facet-objects-"+sf.Name+"-terms",
+				"facet.objects.objects",
 			),
 		),
 	)
 	return agg
 }
 
-func (sf StringFacet) UnmarshalJSON(dataBytes []byte) ([]*StringFacetResult, error) {
+func (sf PersonFacet) UnmarshalJSON(dataBytes []byte) ([]*PersonFacetResult, error) {
 	var data = map[string]elastic.JSONDummy{}
 	if err := json.Unmarshal(dataBytes, &data); err != nil {
 		return nil, errors.Wrapf(err, "cannot unmarshal '%s'", string(dataBytes))
 	}
-	var sfr = &StringFacetsResult{}
+	var sfr = &PersonFacetsResult{}
 	if docCountBytes, ok := data["doc_count"]; ok {
 		if err := json.Unmarshal(docCountBytes, &sfr.DocCount); err != nil {
 			return nil, errors.Wrapf(err, "cannot unmarshal '%s'", string(docCountBytes))
 		}
 	}
-	key := fmt.Sprintf("facet-strings-%s-terms", sf.GetName())
+	key := fmt.Sprintf("facet-persons-%s-terms", sf.GetName())
 	if terms, ok := data[key]; ok {
 		termsStruct := &struct {
 			DocCountErrorUpperBound int                  `json:"doc_count_error_upper_bound,omitempty"`
 			SumOtherDocCount        int                  `json:"sum_other_doc_count,omitempty"`
-			Buckets                 []*StringFacetResult `json:"buckets"`
+			Buckets                 []*PersonFacetResult `json:"buckets"`
 		}{}
 		if err := json.Unmarshal(terms, termsStruct); err != nil {
 			return nil, errors.Wrapf(err, "cannot unmarshal '%s'", string(terms))

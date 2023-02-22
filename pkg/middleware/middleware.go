@@ -10,12 +10,20 @@ type Middleware struct {
 	es elastic.Client
 }
 
-func (m *Middleware) Search(index string, facets []Aggregation) (*Result, error) {
+type SearchFacets struct {
+	StringFacets StringFacets
+	PersonFacets PersonFacets
+}
+
+func (m *Middleware) Search(index string, facets *SearchFacets) (*Result, error) {
 	var api = m.es.GetDSLAPI()
 
 	var aggs = []dsl.BaseAgg{}
-	for _, facet := range facets {
-		aggs = append(aggs, facet.GetAgg(api))
+	if facets.StringFacets != nil {
+		aggs = append(aggs, facets.StringFacets.GetAgg(api))
+	}
+	if facets.PersonFacets != nil {
+		aggs = append(aggs, facets.PersonFacets.GetAgg(api))
 	}
 
 	search := api.Search(
@@ -27,13 +35,34 @@ func (m *Middleware) Search(index string, facets []Aggregation) (*Result, error)
 			),
 		),
 		api.Search.WithAggs(aggs...),
+		/*
+			api.Search.WithFields(
+				api.Fields(
+					api.Fields.WithFields(
+						api.FieldsField("mapping.*"),
+						api.FieldsField("acl.*"),
+						api.FieldsField("sets"),
+						api.FieldsField("flags"),
+					),
+				),
+			),
+		*/
 	)
 
 	result, err := m.es.Search(index, search)
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot query")
 	}
-	_ = result
+	strf, err := facets.StringFacets.UnmarshalJSON(result.Aggregations["facet-string"])
+	if err != nil {
+		return nil, errors.Wrapf(err, "cannot unmarshal '%s'", string(result.Aggregations["facet-string"]))
+	}
+	var _ = strf
+	pf, err := facets.StringFacets.UnmarshalJSON(result.Aggregations["facet-object"])
+	if err != nil {
+		return nil, errors.Wrapf(err, "cannot unmarshal '%s'", string(result.Aggregations["facet-person"]))
+	}
+	var _ = pf
 	var ret = &Result{}
 	return ret, nil
 }

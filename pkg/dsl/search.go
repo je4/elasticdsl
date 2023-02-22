@@ -17,6 +17,12 @@ func (*Search) WithAggs(aggs ...BaseAgg) func(all *tSearch) {
 	}
 }
 
+func (*Search) WithFields(fields *tFields) func(all *tSearch) {
+	return func(all *tSearch) {
+		all.Fields = fields
+	}
+}
+
 func (*Search) WithIndicesBoost(ib tIndicesBoost) func(all *tSearch) {
 	return func(all *tSearch) {
 		all.IndicesBoost = ib
@@ -37,6 +43,7 @@ type tSearch struct {
 	Query        *tQuery       `json:"-"`
 	Aggs         []BaseAgg     `json:"-"`
 	IndicesBoost tIndicesBoost `json:"-"`
+	Fields       *tFields      `json:"-"`
 }
 
 func (s *tSearch) MarshalJSON() ([]byte, error) {
@@ -54,6 +61,11 @@ func (s *tSearch) MarshalJSON() ([]byte, error) {
 	if len(s.IndicesBoost) > 0 {
 		data["indices_boost"] = s.IndicesBoost
 	}
+	if s.Fields != nil {
+		data["fields"] = s.Fields
+		data["_source"] = false
+	}
+
 	return json.Marshal(data)
 }
 
