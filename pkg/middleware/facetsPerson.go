@@ -37,7 +37,7 @@ func (sf PersonFacets) GetAgg(api *dsl.API) dsl.BaseAgg {
 
 }
 
-func (sf PersonFacets) UnmarshalJSON(dataBytes []byte) (*PersonFacetsResult, error) {
+func (sf PersonFacets) FromJSON(dataBytes []byte) (*PersonFacetsResult, error) {
 	var data = map[string]elastic.JSONDummy{}
 	if err := json.Unmarshal(dataBytes, &data); err != nil {
 		return nil, errors.Wrapf(err, "cannot unmarshal '%s'", string(dataBytes))
@@ -53,7 +53,7 @@ func (sf PersonFacets) UnmarshalJSON(dataBytes []byte) (*PersonFacetsResult, err
 	for _, facet := range sf {
 		key := fmt.Sprintf("facet-persons-%s-filter", facet.GetName())
 		if vals, ok := data[key]; ok {
-			r, err := facet.UnmarshalJSON(vals)
+			r, err := facet.FromJSON(vals)
 			if err != nil {
 				return nil, errors.Wrapf(err, "cannot unmarshal '%s'", string(vals))
 			}

@@ -53,12 +53,12 @@ func (m *Middleware) Search(index string, facets *SearchFacets) (*Result, error)
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot query")
 	}
-	strf, err := facets.StringFacets.UnmarshalJSON(result.Aggregations["facet-string"])
+	strf, err := facets.StringFacets.FromJSON(result.Aggregations["facet-string"])
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot unmarshal '%s'", string(result.Aggregations["facet-string"]))
 	}
 	var _ = strf
-	pf, err := facets.StringFacets.UnmarshalJSON(result.Aggregations["facet-object"])
+	pf, err := facets.StringFacets.FromJSON(result.Aggregations["facet-object"])
 	if err != nil {
 		return nil, errors.Wrapf(err, "cannot unmarshal '%s'", string(result.Aggregations["facet-person"]))
 	}

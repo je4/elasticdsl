@@ -35,7 +35,7 @@ func (sf *PersonFacet) GetAgg(api *dsl.API) dsl.BaseAgg {
 	return agg
 }
 
-func (sf PersonFacet) UnmarshalJSON(dataBytes []byte) ([]*PersonFacetResult, error) {
+func (sf PersonFacet) FromJSON(dataBytes []byte) ([]*PersonFacetResult, error) {
 	var data = map[string]elastic.JSONDummy{}
 	if err := json.Unmarshal(dataBytes, &data); err != nil {
 		return nil, errors.Wrapf(err, "cannot unmarshal '%s'", string(dataBytes))
