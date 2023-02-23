@@ -18,6 +18,7 @@ type API struct {
 	AggNested              AggNested
 	AggTerms               AggTerms
 	AggFilter              AggFilter
+	AggScript              AggScript
 	IndicesBoost           IndicesBoost
 	Fields                 Fields
 	FieldsField            FieldsField
@@ -42,6 +43,7 @@ func NewApi() *API {
 		AggNested:              NewAggNested(),
 		AggTerms:               NewAggTerms(),
 		AggFilter:              NewAggFilter(),
+		AggScript:              NewAggScript(),
 		IndicesBoost:           NewIndicesBoost(),
 		Fields:                 NewFields(),
 		FieldsField:            NewFieldsField(),

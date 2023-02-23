@@ -12,6 +12,16 @@ func (sl StringList) MarshalJSON() ([]byte, error) {
 	return json.Marshal(str)
 }
 
+type StringOrList []string
+
+func (sl StringOrList) MarshalJSON() ([]byte, error) {
+	if len(sl) == 1 {
+		return json.Marshal(sl[0])
+	}
+	str := strings.Join(sl, ",")
+	return json.Marshal(str)
+}
+
 type SearchSourceVal struct {
 	BoolValue bool
 	Fields    StringList

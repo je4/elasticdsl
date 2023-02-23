@@ -102,3 +102,25 @@ const (
 	OrderASC  Order = "asc"
 	OrderDESC Order = "desc"
 )
+
+type GapPolicy string
+
+const (
+	GapPolicySkip        GapPolicy = "skip"
+	GapPolicyInsertZeros GapPolicy = "insert_zeros"
+	GapPolicyKeepValues  GapPolicy = "keep_values"
+)
+
+type CollectMode string
+
+const (
+	CollectModeBreadthFirst CollectMode = "breadth_first"
+	CollectModeDepthFirst   CollectMode = "depth_first"
+)
+
+type ExecutionHint string
+
+const (
+	ExecutionHintMap            ExecutionHint = "map"
+	ExecutionHintGlobalOrdinals ExecutionHint = "global_ordinals"
+)
